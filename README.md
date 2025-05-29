@@ -31,6 +31,11 @@ Log collection and monitoring were active.
 
 NSG (Network Security Group) rules existed but needed tightening.
 
+
+
+__________________________________________________________________________________________________
+
+
 ✅ Step 2: Detection & Analysis
 Brute force attempts detected from 5 public IP addresses targeting 6 different Azure VMs.
 
@@ -43,13 +48,18 @@ IP Address	Device Name	Failed Attempts
 185.243.96.107	LogonFailedthreat-hunt-lab	54
 
 🔎 KQL Query Used:
-kql
-Copy
-Edit
+
 DeviceLogonEvents
 | where RemoteIP in ("178.20.129.235", "134.209.120.69", "216.225.206.246", "193.37.69.105", "185.243.96.107")
 | where ActionType != "LogonFailed"
 ✅ Result: No successful logins detected.
+
+
+
+_________________________________________________________________________________________________________
+
+
+
 
 ✅ Step 3: Detection Rule Creation in Sentinel
 🎯 Rule Logic (KQL):
@@ -76,12 +86,18 @@ Tactic: Credential Access
 
 Technique: Brute Force (T1110)
 
+
+
+_________________________________________________________________________________________________________
+
 ✅ Step 4: Containment, Eradication & Recovery
 Affected VMs were isolated using Microsoft Defender for Endpoint.
 
 Full anti-malware scans were run on all machines.
 
 Continued monitoring showed no further malicious activity.
+
+__________________________________________________________________________________________________________
 
 ✅ Step 5: Post-Incident Activity
 NSG rules were updated to block RDP access from the public internet.
