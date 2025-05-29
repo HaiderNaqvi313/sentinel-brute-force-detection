@@ -1,4 +1,4 @@
-# sentinel-brute-force-detection
+#  Microsft Sentinel-brute-force-detection (Incidentt Response/Rule Detection Creation)
 Microsoft Sentinel rule to detect brute force attacks on Azure VMs – aligned with NIST 800-61 IR lifecycle.
 
 
