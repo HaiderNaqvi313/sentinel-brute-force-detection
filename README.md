@@ -40,18 +40,28 @@ ________________________________________________________________________________
 Brute force attempts detected from 5 public IP addresses targeting 6 different Azure VMs.
 
 IP Address	Device Name	Failed Attempts
+
 178.20.129.235	LogonFailedvmchei	52
+
 134.209.120.69	LogonFaileddangerclose	57
+
 216.225.206.246	LogonFailedwindows-mde-kb	80
+
 193.37.69.105	LogonFailedjh-vm-test-mde	57
+
 193.37.69.105	LogonFailedmde-ron	82
+
 185.243.96.107	LogonFailedthreat-hunt-lab	54
+
 
 🔎 KQL Query Used:
 
 DeviceLogonEvents
 | where RemoteIP in ("178.20.129.235", "134.209.120.69", "216.225.206.246", "193.37.69.105", "185.243.96.107")
+
+
 | where ActionType != "LogonFailed"
+
 ✅ Result: No successful logins detected.
 
 
