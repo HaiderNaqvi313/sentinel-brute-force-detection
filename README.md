@@ -36,33 +36,28 @@ NSG (Network Security Group) rules existed but needed tightening.
 __________________________________________________________________________________________________
 
 
-✅ Step 2: Detection & Analysis
-Brute force attempts detected from 5 public IP addresses targeting 6 different Azure VMs.
+### ✅ Step 2: Detection & Analysis
 
-IP Address	Device Name	Failed Attempts
+Brute force attempts were detected from 5 public IP addresses targeting 6 different Azure VMs.
 
-178.20.129.235	LogonFailedvmchei	52
+| IP Address         | Device Name               | Action Type   | Failed Attempts |
+|--------------------|---------------------------|---------------|-----------------|
+| 178.20.129.235     | vmchei                    | LogonFailed   | 52              |
+| 134.209.120.69     | dangerclose               | LogonFailed   | 57              |
+| 216.225.206.246    | windows-mde-kb            | LogonFailed   | 80              |
+| 193.37.69.105      | jh-vm-test-mde            | LogonFailed   | 57              |
+| 193.37.69.105      | mde-ron                   | LogonFailed   | 82              |
+| 185.243.96.107     | threat-hunt-lab           | LogonFailed   | 54              |
 
-134.209.120.69	LogonFaileddangerclose	57
+---
 
-216.225.206.246	LogonFailedwindows-mde-kb	80
+🔎 **KQL Query Used:**
 
-193.37.69.105	LogonFailedjh-vm-test-mde	57
-
-193.37.69.105	LogonFailedmde-ron	82
-
-185.243.96.107	LogonFailedthreat-hunt-lab	54
-
-
-🔎 KQL Query Used:
-
+```kql
 DeviceLogonEvents
 | where RemoteIP in ("178.20.129.235", "134.209.120.69", "216.225.206.246", "193.37.69.105", "185.243.96.107")
-
-
 | where ActionType != "LogonFailed"
 
-✅ Result: No successful logins detected.
 
 
 
