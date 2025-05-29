@@ -24,32 +24,32 @@ Tools & Framework Used :
 Incident Type: Brute Force Attack on Azure VMs
 Framework: NIST SP 800-61 – Incident Response Lifecycle
 
-✅ Step 1: Preparation
-Microsoft Sentinel and Microsoft Defender for Endpoint (MDE) were already deployed on all VMs.
+# 🔐 Azure VM Brute Force Detection – Microsoft Sentinel
 
-Log collection and monitoring were active.
+This project detects and responds to brute force login attempts against Azure virtual machines using Microsoft Sentinel and Microsoft Defender for Endpoint (MDE). The response process follows the NIST SP 800-61 Incident Response Lifecycle and includes custom KQL-based rule creation.
 
-NSG (Network Security Group) rules existed but needed tightening.
+---
 
+## ✅ Step 1: Preparation
 
+- Microsoft Sentinel and MDE pre-configured on all virtual machines.
+- Log collection and monitoring for login attempts were active.
+- Network Security Group (NSG) rules existed but required updates.
 
-__________________________________________________________________________________________________
+---
 
-
-### ✅ Step 2: Detection & Analysis
+## ✅ Step 2: Detection & Analysis
 
 Brute force attempts were detected from 5 public IP addresses targeting 6 different Azure VMs.
 
-| IP Address         | Device Name               | Action Type   | Failed Attempts |
-|--------------------|---------------------------|---------------|-----------------|
-| 178.20.129.235     | vmchei                    | LogonFailed   | 52              |
-| 134.209.120.69     | dangerclose               | LogonFailed   | 57              |
-| 216.225.206.246    | windows-mde-kb            | LogonFailed   | 80              |
-| 193.37.69.105      | jh-vm-test-mde            | LogonFailed   | 57              |
-| 193.37.69.105      | mde-ron                   | LogonFailed   | 82              |
-| 185.243.96.107     | threat-hunt-lab           | LogonFailed   | 54              |
-
----
+| IP Address         | Device Name         | Action Type   | Failed Attempts |
+|--------------------|---------------------|---------------|-----------------|
+| 178.20.129.235     | vmchei              | LogonFailed   | 52              |
+| 134.209.120.69     | dangerclose         | LogonFailed   | 57              |
+| 216.225.206.246    | windows-mde-kb      | LogonFailed   | 80              |
+| 193.37.69.105      | jh-vm-test-mde      | LogonFailed   | 57              |
+| 193.37.69.105      | mde-ron             | LogonFailed   | 82              |
+| 185.243.96.107     | threat-hunt-lab     | LogonFailed   | 54              |
 
 🔎 **KQL Query Used:**
 
@@ -57,56 +57,62 @@ Brute force attempts were detected from 5 public IP addresses targeting 6 differ
 DeviceLogonEvents
 | where RemoteIP in ("178.20.129.235", "134.209.120.69", "216.225.206.246", "193.37.69.105", "185.243.96.107")
 | where ActionType != "LogonFailed"
+```
 
+✅ **Result:** No successful logins detected.
 
+---
 
+## ✅ Step 3: Detection Rule Creation in Sentinel
 
-_________________________________________________________________________________________________________
+🎯 **Rule Logic (KQL):**
 
-
-
-
-✅ Step 3: Detection Rule Creation in Sentinel
-🎯 Rule Logic (KQL):
-kql
-Copy
-Edit
+```kql
 DeviceLogonEvents
 | where ActionType == "LogonFailed"
 | where RemoteIP !startswith "10." and RemoteIP !startswith "192.168." and RemoteIP !startswith "172."
 | summarize FailedAttempts = count() by RemoteIP, DeviceName, bin(Timestamp, 1h)
 | where FailedAttempts >= 50
-📌 Rule Settings:
-Type: Scheduled Query Rule
+```
 
-Run every: 5 hours
+📌 **Rule Settings:**
 
-Look back: 5 hours
+| Setting              | Value                        |
+|----------------------|------------------------------|
+| Type                 | Scheduled Query Rule         |
+| Run Every            | 5 hours                      |
+| Look Back            | 5 hours                      |
+| Severity             | High                         |
 
-Severity: High
+🎯 **MITRE ATT&CK Mapping:**
 
-MITRE ATT&CK Mapping:
+| Category   | Value                        |
+|------------|------------------------------|
+| Tactic     | Credential Access            |
+| Technique  | Brute Force (T1110)          |
 
-Tactic: Credential Access
+---
 
-Technique: Brute Force (T1110)
+## ✅ Step 4: Containment, Eradication & Recovery
 
+- Isolated affected VMs using Microsoft Defender for Endpoint.
+- Ran full anti-malware scans on all impacted systems.
+- Monitored environment post-cleanup for any reinfection attempts.
 
+---
 
-_________________________________________________________________________________________________________
+## ✅ Step 5: Post-Incident Activity
 
-✅ Step 4: Containment, Eradication & Recovery
-Affected VMs were isolated using Microsoft Defender for Endpoint.
+- Updated NSG rules to block public RDP access.
+- Allowed RDP only from a trusted home IP.
+- Proposed policy to require use of Azure Bastion for all VM access.
 
-Full anti-malware scans were run on all machines.
+---
 
-Continued monitoring showed no further malicious activity.
+## 📄 Report
 
-__________________________________________________________________________________________________________
+See `/Report/BruteForce_Incident_Response_HaiderNaqvi.docx` for full documentation of the incident response lifecycle applied to this scenario.
 
-✅ Step 5: Post-Incident Activity
-NSG rules were updated to block RDP access from the public internet.
+---
 
-Only allowed access from trusted IPs (e.g., analyst’s home IP).
-
-Proposed policy to enforce Bastion Host usage for all VM remote access going forward.
+Created by **Haider Naqvi**
