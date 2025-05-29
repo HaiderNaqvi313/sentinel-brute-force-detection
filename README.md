@@ -109,9 +109,6 @@ DeviceLogonEvents
 
 ---
 
-## 📄 Report
-
-See `/Report/BruteForce_Incident_Response_HaiderNaqvi.docx` for full documentation of the incident response lifecycle applied to this scenario.
 
 ---
 
