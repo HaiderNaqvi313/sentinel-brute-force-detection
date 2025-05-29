@@ -1,4 +1,4 @@
-#  Microsft Sentinel-brute-force-detection (Incidentt Response/Rule Detection Creation)
+#  Microsft Sentinel-Brute-Force-detection (Incident Response/Rule Detection Creation)
 Microsoft Sentinel rule to detect brute force attacks on Azure VMs – aligned with NIST 800-61 IR lifecycle.
 
 
@@ -8,7 +8,6 @@ This project demonstrates how to detect brute force attacks on Azure virtual mac
 
 It includes a complete setup:
 - KQL detection rule
-- Step-by-step UI screenshots
 - Incident response report based on NIST 800-61
 - Optional automated response guidance
 
